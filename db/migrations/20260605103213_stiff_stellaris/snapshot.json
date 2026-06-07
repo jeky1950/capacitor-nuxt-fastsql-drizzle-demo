@@ -1,0 +1,54 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "1cd37b6c-e9c9-4640-80d7-d0a9c173a2cd",
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "ddl": [
+    {
+      "name": "groceries",
+      "entityType": "tables"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "groceries"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "groceries"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "quantity",
+      "entityType": "columns",
+      "table": "groceries"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "groceries_pk",
+      "table": "groceries",
+      "entityType": "pks"
+    }
+  ],
+  "renames": []
+}

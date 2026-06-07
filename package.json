@@ -7,17 +7,33 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "drizzle:generate": "drizzle-kit generate --dialect=sqlite --driver=durable-sqlite --schema=./db/schema.ts --out=./db/migrations",
+    "mobile": "npm run generate && npx cap sync",
+    "mobile:ios": "npm run mobile && npx cap open ios",
+    "mobile:android": "npm run mobile && npx cap open android"
   },
   "dependencies": {
-    "kysely": "^0.29.2",
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/core": "^8.4.0",
+    "@capacitor/ios": "^8.4.0",
+    "@capacitor/keyboard": "^8.0.3",
+    "@capacitor/preferences": "^8.0.1",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2",
+    "@capgo/capacitor-fast-sql": "^8.0.41",
+    "@noble/hashes": "^2.2.0",
+    "drizzle-orm": "^1.0.0-beta.22",
     "nuxt": "^4.4.6",
     "sqlocal": "^0.18.0",
     "vue": "^3.5.34",
     "vue-router": "^5.0.7"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.4.0",
     "@types/node": "^25.9.1",
-    "kysely-ctl": "^0.21.0"
+    "drizzle-kit": "^1.0.0-beta.22",
+    "typescript": "^6.0.3"
   }
 }

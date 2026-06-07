@@ -1,34 +1,33 @@
 <template>
     <main>
-        <h2>Database Information</h2>
-        <div>{{ db_info }}</div>
-
         <h3>Input</h3>
         <form @submit.prevent="createGroceries">
             <div>
                 <input v-model="name" placeholder="Enter the name" required />
             </div>
             <div>
-                <input v-model="quantity" type="number" placeholder="Enter the quantity" required validate />
+                <input v-model="quantity" type="number" placeholder="Enter the quantity" validate required />
             </div>
             <button type="submit">Submit</button>
         </form>
 
-        <h3>Migrate</h3>
-        <button @click="runMigration">Migrate</button>
-
         <h3>Groceries ({{ grocery_list.length }})</h3>
+        <div>
+            <input @input="search" v-model="search_query" placeholder="Search" validate required />
+        </div>
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Quantity</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="{ id, name} of grocery_list">
+                <tr v-for="{ id, name, quantity} of grocery_list">
                     <td>{{ id }}</td>
                     <td>{{ name }}</td>
+                    <td>{{ quantity }}</td>
                 </tr>
             </tbody>
         </table>
@@ -36,37 +35,37 @@
 </template>
 
 <script setup lang="ts">
-    import { SQLocal } from 'sqlocal';
-    
-    const { getDatabaseInfo, reactiveQuery } = new SQLocal({
-        databasePath: 'database.sqlite3',
-        reactive: true
-    });
+    import { like } from 'drizzle-orm';
+    import { groceries } from "~~/db/schema";
 
-    const db_info = ref();
     const name = ref<string>("");
     const quantity = ref<number>(0);
-    const grocery_list = ref([]);
+    const search_query = ref<string>();
+    const grocery_list = ref<typeof groceries.$inferInsert[]>([]);
 
     onMounted(async () => {
-        db_info.value = await getDatabaseInfo()
+        alert('Working')
+        grocery_list.value = await db.select().from(groceries)
     })
 
-    const subscription = reactiveQuery(
-        db.selectFrom('groceries').select(['id', 'name', 'quantity']).compile()
-    ).subscribe(data => grocery_list.value = data)
-
-    onBeforeUnmount(() => subscription.unsubscribe())
-
     const createGroceries = async () => {
-        const result = await db.insertInto('groceries').values({
+        const result = await db.insert(groceries).values({
             name: name.value,
             quantity: quantity.value
-        }).execute()
-        console.log(result)
+        }).returning()
+
+        grocery_list.value = await db.select().from(groceries)
+        
+        // Clear the form
+        name.value = "";
+        quantity.value = 0;
     }
 
-    const runMigration = async () => {
-        await migrator.migrateToLatest()
+    const search = async () => {
+        if(search_query.value) {
+            grocery_list.value = await db.select().from(groceries).where(like(groceries.name, `%${ search_query.value }%`))
+        } else {
+            grocery_list.value = await db.select().from(groceries)
+        }
     }
 </script>

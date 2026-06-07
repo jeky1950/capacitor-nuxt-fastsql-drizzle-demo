@@ -2,7 +2,9 @@ import sqlocal from 'sqlocal/vite';
 
 export default defineNuxtConfig({
   vite: {
-    plugins: [sqlocal()],
+    plugins: [
+      sqlocal()
+    ],
     server: {
       headers: {
         'Cross-Origin-Opener-Policy': 'same-origin',
@@ -11,7 +13,10 @@ export default defineNuxtConfig({
     },
     optimizeDeps: {
       exclude: ['@sqlite.org/sqlite-wasm'],
-    }
+    },
+    assetsInclude: [
+      "**/*.sql"
+    ]
   },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true }
