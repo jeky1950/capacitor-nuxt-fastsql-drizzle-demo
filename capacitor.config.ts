@@ -17,7 +17,9 @@ const config: CapacitorConfig = {
       resizeOnFullScreen: true,
     },
     StatusBar: {
+      overlaysWebView: false,
       style: 'dark',
+      backgroundColor: '#ffffffff'
     },
     CapacitorSQLite: {
       iosDatabaseLocation: 'Library/CapacitorDatabase',

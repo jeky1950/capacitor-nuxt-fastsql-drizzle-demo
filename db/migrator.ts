@@ -19,20 +19,29 @@ export const migrate = async () => {
         `,
 	);
 
+    type AppliedMigration = {
+        id: number,
+        name: string,
+        hash: string,
+        created_at: number
+    }
+
     const appliedMigrations = (await db.all(
 		sql`SELECT * FROM ${ MIGRATIONS_TABLE_NAME };`,
-	)) as unknown[][];
+	)) as AppliedMigration[];
 
     await db.transaction(async (tx) => {
         for(let migration_name of Object.keys(migration_summary.migrations)) {
             // Get migration file a raw text
-            const migration_sql = (await import(`./migrations/${ migration_name }/migration.sql?raw`)).default;
+            let migration_sql = (await import(`./migrations/${ migration_name }/migration.sql?raw`)).default;
+
+            migration_sql = migration_sql.trim().replace(/[\r\n\t]+/gm, " ");
 
             // Generate a hash of the migration file
             const hash = Buffer.from(sha256(Buffer.from(migration_sql))).toString("hex")
 
-            // Check if the migration file was applied to the SQLite DB
-            if (appliedMigrations.some((applied_migration) => applied_migration[2] === hash)) continue;
+            // Check if the migration file was applied to the SQLite DB  
+            if (appliedMigrations.some((applied_migration) => applied_migration?.hash === hash)) continue;
             
             // Now run the migration on to the SQLite DB
             try {
@@ -51,8 +60,6 @@ export const migrate = async () => {
                     );
                 `,
 			);
-
-            console.log(`Applied Migration: ${ migration_name } \nHash: ${ hash } \nSQL: \n${ migration_sql }`)
         }
     });
 }
