@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.sqlocal.demo',
-  appName: 'nuxt-sqlocal-capacitor',
+  appId: 'com.sqlite.demo',
+  appName: 'capacitor-nuxt-fastly-drizzle',
   webDir: '.output/public',
   plugins: {
     SplashScreen: {

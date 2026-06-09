@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "drizzle:generate": "drizzle-kit generate --dialect=sqlite --driver=durable-sqlite --schema=./db/schema.ts --out=./db/migrations",
-    "mobile": "npm run generate && npx cap sync",
+    "mobile": "npm run generate && npx cap copy",
     "mobile:ios": "npm run mobile && npx cap open ios",
     "mobile:android": "npm run mobile && npx cap open android"
   },
