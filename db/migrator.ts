@@ -26,9 +26,7 @@ export const migrate = async () => {
         created_at: number
     }
 
-    const appliedMigrations = (await db.all(
-        sql`SELECT * FROM ${ MIGRATIONS_TABLE_NAME };`,
-    )) as AppliedMigration[];
+    const appliedMigrations = await db.all(sql`SELECT * FROM ${ MIGRATIONS_TABLE_NAME };`)
 
     await db.transaction(async (tx) => {
         for(let migration_name of Object.keys(migration_summary.migrations)) {
@@ -48,7 +46,8 @@ export const migrate = async () => {
             const hash = Buffer.from(sha256(Buffer.from(migration_sql))).toString("hex")
 
             // Check if the migration file was applied to the SQLite DB  
-            if(appliedMigrations.some((applied_migration) => applied_migration?.hash === hash)) continue;
+            // @ts-ignore
+            if (appliedMigrations.some((applied_migration) => applied_migration.at(2) === hash)) continue;
 
             // Now run the migration on to the SQLite DB
             try {
